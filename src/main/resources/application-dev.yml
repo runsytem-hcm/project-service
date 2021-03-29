@@ -30,7 +30,7 @@ spring:
      database: MYSQL
      show-sql: true
      mapping-resources:
-        sql/account-sql.xml
+        sql/project-sql.xml
   jackson:
     serialization:
       write-dates-as-timestamps: false

@@ -1,6 +1,6 @@
 package jp.gmo.project.interceptor;
 
-import jp.gmo.user.service.LoggingService;
+import jp.gmo.project.service.LoggingService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.web.servlet.DispatcherType;

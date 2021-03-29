@@ -1,4 +1,4 @@
-package jp.gmo.user.service;
+package jp.gmo.project.service;
 
 import java.util.Collection;
 import java.util.Enumeration;

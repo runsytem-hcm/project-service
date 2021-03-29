@@ -13,7 +13,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import jp.gmo.user.service.LoggingService;
+import jp.gmo.project.service.LoggingService;
 
 /**
  * The Class CustomResponseBodyAdviceAdapter.
