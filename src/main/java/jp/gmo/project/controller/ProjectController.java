@@ -1,10 +1,12 @@
 package jp.gmo.project.controller;
 
-import jp.gmo.project.dto.ProjectDto;
+import jp.gmo.project.dto.ProjectSearchDto;
 import jp.gmo.project.dto.RankDto;
 import jp.gmo.project.request.AddProjectRequest;
+import jp.gmo.project.request.DetailProjectRequest;
 import jp.gmo.project.request.SearchProjectRequest;
 import jp.gmo.project.response.PageAndDataResponse;
+import jp.gmo.project.response.ProjectDetailResponse;
 import jp.gmo.project.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,8 @@ public class ProjectController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void executeAddProject(@Valid @RequestBody AddProjectRequest request) {
-        projectService.executeAddProject("", request);
+    public void executeAddProject(@RequestHeader("email") String email, @Valid @RequestBody AddProjectRequest request) {
+        projectService.executeAddProject(email, request);
     }
 
     @PostMapping(path = "/list-rank")
@@ -33,7 +35,12 @@ public class ProjectController {
     }
 
     @PostMapping("/list-project")
-    public ResponseEntity<PageAndDataResponse<List<ProjectDto>>> executeGetListEmployees(@Valid @RequestBody SearchProjectRequest request) {
-        return new ResponseEntity<>(projectService.executeGetLisProject(request), HttpStatus.OK);
+    public ResponseEntity<PageAndDataResponse<List<ProjectSearchDto>>> executeGetListEmployees(@Valid @RequestBody SearchProjectRequest request) {
+        return new ResponseEntity<>(projectService.executeGetListProject(request), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/detail-project")
+    public ResponseEntity<ProjectDetailResponse> executeGetDetailProject(@Valid @RequestBody DetailProjectRequest request) {
+        return new ResponseEntity<>(projectService.executeDetailProject(request), HttpStatus.OK);
     }
 }

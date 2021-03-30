@@ -1,6 +1,7 @@
 package jp.gmo.project.mapper;
 
 import jp.gmo.project.constant.RegexConstants;
+import jp.gmo.project.dto.ProjectDto;
 import jp.gmo.project.entity.ProjectEntity;
 import jp.gmo.project.request.AddProjectRequest;
 import jp.gmo.project.utils.DateUtils;
@@ -40,6 +41,37 @@ public class ProjectMapper {
             projectEntity.setEmailCC(StringUtils.join(",", projectDto.getEmailCC()));
 
             return projectEntity;
+        }
+    }
+
+    public ProjectDto entityToDto(ProjectEntity entity){
+        if(entity == null){
+            return null;
+        } else {
+            ProjectDto projectDto = new ProjectDto();
+            projectDto.setProjectCode(entity.getProjectCode());
+            if(entity.getProjectNameJP() != null){
+                projectDto.setProjectNameJP(entity.getProjectNameJP());
+            }
+            if(entity.getProjectNameVN() != null){
+                projectDto.setProjectNameVN(entity.getProjectNameVN());
+            }
+            if(entity.getBillableEffort() != null){
+                projectDto.setBillableEffort(entity.getBillableEffort());
+            }
+            projectDto.setStartDate(entity.getStartDate());
+            if(entity.getEndDate() != null){
+                projectDto.setEndDate(entity.getEndDate());
+            }
+
+            projectDto.setCustomerName(entity.getCustomerName());
+            projectDto.setSale(entity.getSale());
+            projectDto.setRank(entity.getRank());
+            projectDto.setScope(entity.getScope());
+            projectDto.setObjectives(entity.getObjectives());
+            projectDto.setEmailCC(entity.getEmailCC());
+
+            return projectDto;
         }
     }
 }

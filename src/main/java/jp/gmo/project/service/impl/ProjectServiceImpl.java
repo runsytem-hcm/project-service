@@ -1,17 +1,22 @@
 package jp.gmo.project.service.impl;
 
+import jp.gmo.project.dto.ProjectDetailDto;
 import jp.gmo.project.dto.ProjectDto;
+import jp.gmo.project.dto.ProjectSearchDto;
 import jp.gmo.project.dto.RankDto;
 import jp.gmo.project.entity.ProjectDetailEntity;
 import jp.gmo.project.entity.ProjectEntity;
+import jp.gmo.project.exception.ProjectNotExistException;
 import jp.gmo.project.mapper.ProjectDetailMapper;
 import jp.gmo.project.mapper.ProjectMapper;
 import jp.gmo.project.repository.ProjectDetailRepository;
 import jp.gmo.project.repository.ProjectRepository;
 import jp.gmo.project.repository.RankRepository;
 import jp.gmo.project.request.AddProjectRequest;
+import jp.gmo.project.request.DetailProjectRequest;
 import jp.gmo.project.request.SearchProjectRequest;
 import jp.gmo.project.response.PageAndDataResponse;
+import jp.gmo.project.response.ProjectDetailResponse;
 import jp.gmo.project.service.ProjectService;
 import jp.gmo.project.utils.Utils;
 import lombok.AllArgsConstructor;
@@ -84,14 +89,28 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public PageAndDataResponse<List<ProjectDto>> executeGetLisProject(SearchProjectRequest request) {
+    public PageAndDataResponse<List<ProjectSearchDto>> executeGetListProject(SearchProjectRequest request) {
 
         int limit = Integer.parseInt(request.getTotalRecordOfPage());
         int offset = (Integer.parseInt(request.getCurrentPage()) - 1) * limit;
 
-        List<ProjectDto> projectDtoList = projectRepository.getListProject(request.getProjectName(), request.getStartDate(), request.getEndDate(), limit, offset);
+        List<ProjectSearchDto> projectDtoList = projectRepository.getListProject(request.getProjectName(), request.getStartDate(), request.getEndDate(), limit, offset);
         BigInteger totalRecord = projectRepository.countProject(request.getProjectName(), request.getStartDate(), request.getEndDate());
 
         return PageAndDataResponse.create(projectDtoList, request.getCurrentPage(), request.getTotalRecordOfPage(), String.valueOf(totalRecord));
+    }
+
+    @Override
+    public ProjectDetailResponse executeDetailProject(DetailProjectRequest request) {
+
+        ProjectDto project = projectRepository
+                .findByProjectCode(Integer.parseInt(request.getProjectCode()))
+                .map(projectMapper::entityToDto).orElseThrow(ProjectNotExistException::new);
+
+        List<ProjectDetailDto> member = detailRepository
+                .findByProjectCode(project.getProjectCode())
+                .stream().map(projectDetailMapper::entityToDto).collect(Collectors.toList());
+
+        return new ProjectDetailResponse(project, member);
     }
 }

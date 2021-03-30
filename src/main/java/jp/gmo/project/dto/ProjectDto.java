@@ -1,21 +1,22 @@
 package jp.gmo.project.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ProjectDto implements Serializable {
-    private String projectCode;
-    private String projectName;
-    private String memberCode;
-    private String memberName;
-    private String position;
-    private String startDate;
-    private String endDate;
-    private String createTime;
+public class ProjectDto {
+
+    private Integer projectCode;
+    private String projectNameJP;
+    private String projectNameVN;
+    private String billableEffort;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String customerName;
+    private String sale;
+    private Integer rank;
+    private String scope;
+    private String objectives;
+    private String emailCC;
 }

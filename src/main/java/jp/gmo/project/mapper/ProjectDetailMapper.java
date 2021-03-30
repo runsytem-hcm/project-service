@@ -1,5 +1,6 @@
 package jp.gmo.project.mapper;
 
+import jp.gmo.project.dto.ProjectDetailDto;
 import jp.gmo.project.entity.ProjectDetailEntity;
 import jp.gmo.project.request.AddProjectRequest;
 
@@ -23,6 +24,17 @@ public class ProjectDetailMapper {
                     detailEntity.setPositionCode(3);
             }
             return detailEntity;
+        }
+    }
+
+    public ProjectDetailDto entityToDto(ProjectDetailEntity entity){
+        if(entity == null){
+            return null;
+        } else {
+            ProjectDetailDto detailDto = new ProjectDetailDto();
+            detailDto.setEmployeeCode(entity.getEmployeeCode());
+            detailDto.setPositionCode(entity.getPositionCode());
+            return  detailDto;
         }
     }
 }

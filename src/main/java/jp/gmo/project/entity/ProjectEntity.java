@@ -38,7 +38,7 @@ public class ProjectEntity {
     private String sale;
 
     @Column(name = "rank")
-    private int rank;
+    private Integer rank;
 
     @Column(name = "scope")
     private String scope;

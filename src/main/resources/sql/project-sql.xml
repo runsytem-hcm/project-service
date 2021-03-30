@@ -31,7 +31,7 @@
     </named-native-query>
 
     <sql-result-set-mapping name="projectInfo">
-        <constructor-result target-class="jp.gmo.project.dto.ProjectDto">
+        <constructor-result target-class="jp.gmo.project.dto.ProjectSearchDto">
             <column name="projectCode" />
             <column name="projectName" />
             <column name="memberCode" />
