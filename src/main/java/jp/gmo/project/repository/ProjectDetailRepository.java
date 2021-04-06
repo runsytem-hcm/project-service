@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ProjectDetailRepository extends JpaRepository<ProjectDetailEntity, Integer> {
-    //List<ProjectDetailEntity> findByProjectCodeAndDeleteFlag(int projectCode, int deleteFlag);
+    List<ProjectDetailEntity> findByProjectEntityProjectCodeAndDeleteFlag(int projectCode, int deleteFlag);
 }

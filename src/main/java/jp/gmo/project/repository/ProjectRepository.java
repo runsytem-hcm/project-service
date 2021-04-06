@@ -21,7 +21,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer>
             , @Param("offset") int offset
             , @Param("limit") int limit);
 
-    
+
     @Query(name = "countProject", nativeQuery = true)
     BigInteger countProject(@Param("projectName") String projectName
             , @Param("startDate") String startDate

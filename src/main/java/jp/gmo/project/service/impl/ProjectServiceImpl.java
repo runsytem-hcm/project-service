@@ -111,86 +111,86 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void executeUpdateProject(String email, UpdateProjectRequest request) throws ResourceAccessException, JsonProcessingException {
 
-//        AccountDto accountDto = callAPIsService.getAccountInfo(email);
-//        boolean isUpdate = false;
-//
-//        if (accountDto == null) {
-//            throw new ProjectNotExistException();
-//        }
-//
-//        if (!accountDto.getRoleId().equals(RoleEnum.USER.getValue())) {
-//            isUpdate = true;
-//        } else {
-//            int countProject = projectRepository.checkRoleOfProject(Integer.parseInt(request.getProjectCode()),
-//                    accountDto.getEmployeeCode(),
-//                    Arrays.asList(PositionEnum.PROJECT_MANAGER.getValue().toString(), PositionEnum.TEAM_LEADER.getValue().toString()));
-//            if (countProject > 0) {
-//                isUpdate = true;
-//            }
-//        }
-//
-//        if (isUpdate) {
-//            projectRepository
-//                    .findByProjectCodeAndDeleteFlag(Integer.parseInt(request.getProjectCode()), 0)
-//                    .ifPresent(project -> {
-//
-//                        project.setProjectNameJP(request.getProjectNameJP());
-//                        project.setProjectNameVN(request.getProjectNameVN());
-//                        project.setBillableEffort(request.getBillableEffort());
-//                        project.setStartDate(DateUtils.stringToDate(request.getStartDate(), RegexConstants.CONST_STR_PATTERN_YYYY_MM_DD));
-//                        project.setEndDate(DateUtils.stringToDate(request.getEndDate(), RegexConstants.CONST_STR_PATTERN_YYYY_MM_DD));
-//                        project.setCustomerName(request.getCustomerName());
-//                        project.setSale(request.getSale());
-//                        project.setScope(request.getScope());
-//                        project.setRank(Integer.parseInt(request.getRank()));
-//                        project.setScope(request.getScope());
-//                        project.setObjectives(request.getObjectives());
-//                        project.setEmailCC(String.join(",", request.getEmailCC()));
-//                        project.setUpdateBy(Utils.getUpdateBy(accountDto.getEmail()));
-//                        project.setUpdateTime(LocalDateTime.now());
-//
-//                        log.debug("Update Information for Project: {}", project);
-//
-//                        // Get list member update from request
-//                        List<ProjectDetailDto> memberNewList = request.getMember();
-//
-//                        // Check role PM duplicate
-//                        List<ProjectDetailDto> countRolePM = memberNewList.stream()
-//                                .filter(projectDto -> projectDto.getPositionCode().equals(PositionEnum.PROJECT_MANAGER.getValue()))
-//                                .collect(Collectors.toList());
-//
-//                        if(countRolePM.size() > 1){
-//                            throw new DuplicateException("Role của PM không được trùng.");
-//                        }
-//
-//                        // Check duplicate
-//                        if (Utils.findDuplicate(memberNewList).size() > 0) {
-//                            throw new DuplicateException("Nhân viên và vai trò trong dự án không được trùng nhau.");
-//                        }
-//
-//                        // Get List member of project
-//                        List<ProjectDetailEntity> memberOldList = detailRepository.findByProjectCodeAndDeleteFlag(project.getProjectCode(), 0);
-//                        // Delete member old
-//                        detailRepository.deleteAll(memberOldList);
-//
-//                        // Add member new
-//                        memberNewList.forEach(memberNewDto -> {
-//
-//                            ProjectDetailEntity member = new ProjectDetailEntity();
-//                           // member.setProjectCode(project.getProjectCode());
-//                            member.setEmployeeCode(memberNewDto.getEmployeeCode());
-//                            member.setPositionCode(memberNewDto.getPositionCode());
-//                            member.setCreateTime(LocalDateTime.now());
-//                            member.setCreateBy(Utils.getUpdateBy(accountDto.getEmail()));
-//                            member.setDeleteFlag(0);
-//
-//                            detailRepository.save(member);
-//                            log.debug("Update Information for Project Detail: {}", member);
-//                        });
-//
-//                    });
-//        } else {
-//            throw new ForbiddenException();
-//        }
+        AccountDto accountDto = callAPIsService.getAccountInfo(email);
+        boolean isUpdate = false;
+
+        if (accountDto == null) {
+            throw new ProjectNotExistException();
+        }
+
+        if (!accountDto.getRoleId().equals(RoleEnum.USER.getValue())) {
+            isUpdate = true;
+        } else {
+            int countProject = projectRepository.checkRoleOfProject(Integer.parseInt(request.getProjectCode()),
+                    accountDto.getEmployeeCode(),
+                    Arrays.asList(PositionEnum.PROJECT_MANAGER.getValue().toString(), PositionEnum.TEAM_LEADER.getValue().toString()));
+            if (countProject > 0) {
+                isUpdate = true;
+            }
+        }
+
+        if (isUpdate) {
+            projectRepository
+                    .findByProjectCodeAndDeleteFlag(Integer.parseInt(request.getProjectCode()), 0)
+                    .ifPresent(project -> {
+
+                        project.setProjectNameJP(request.getProjectNameJP());
+                        project.setProjectNameVN(request.getProjectNameVN());
+                        project.setBillableEffort(request.getBillableEffort());
+                        project.setStartDate(DateUtils.stringToDate(request.getStartDate(), RegexConstants.CONST_STR_PATTERN_YYYY_MM_DD));
+                        project.setEndDate(DateUtils.stringToDate(request.getEndDate(), RegexConstants.CONST_STR_PATTERN_YYYY_MM_DD));
+                        project.setCustomerName(request.getCustomerName());
+                        project.setSale(request.getSale());
+                        project.setScope(request.getScope());
+                        project.setRank(Integer.parseInt(request.getRank()));
+                        project.setScope(request.getScope());
+                        project.setObjectives(request.getObjectives());
+                        project.setEmailCC(String.join(",", request.getEmailCC()));
+                        project.setUpdateBy(Utils.getUpdateBy(accountDto.getEmail()));
+                        project.setUpdateTime(LocalDateTime.now());
+
+                        log.debug("Update Information for Project: {}", project);
+
+                        // Get list member update from request
+                        List<ProjectDetailDto> memberNewList = request.getMember();
+
+                        // Check role PM duplicate
+                        List<ProjectDetailDto> countRolePM = memberNewList.stream()
+                                .filter(projectDto -> projectDto.getPositionCode().equals(PositionEnum.PROJECT_MANAGER.getValue()))
+                                .collect(Collectors.toList());
+
+                        if(countRolePM.size() > 1){
+                            throw new DuplicateException("Role của PM không được trùng.");
+                        }
+
+                        // Check duplicate
+                        if (Utils.findDuplicate(memberNewList).size() > 0) {
+                            throw new DuplicateException("Nhân viên và vai trò trong dự án không được trùng nhau.");
+                        }
+
+                        // Delete member old
+                        detailRepository.deleteAll(project.getProjectDetailList());
+
+                        List<ProjectDetailEntity> memberList = new ArrayList<>();
+
+                        // Add member new
+                        memberNewList.forEach(memberNewDto -> {
+
+                            ProjectDetailEntity member = new ProjectDetailEntity();
+                            member.setEmployeeCode(memberNewDto.getEmployeeCode());
+                            member.setPositionCode(memberNewDto.getPositionCode());
+                            member.setCreateTime(LocalDateTime.now());
+                            member.setCreateBy(Utils.getUpdateBy(accountDto.getEmail()));
+                            member.setDeleteFlag(0);
+
+                            memberList.add(member);
+                            log.debug("Update Information for Project Detail: {}", member);
+                        });
+
+                        project.setProjectDetailList(memberList);
+                    });
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }
