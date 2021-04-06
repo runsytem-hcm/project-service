@@ -14,11 +14,11 @@ public class PageAndDataResponse<T> {
 
     @JsonProperty(value = "data", index = 1)
     private T data;
-    private String totalRecord;
-    private String currentPage;
-    private String totalRecordOfPage;
+    private int totalRecord;
+    private int currentPage;
+    private int totalRecordOfPage;
 
-    public static <T> PageAndDataResponse<T> create(T data, String totalRecord, String currentPage, String totalRecordOfPage) {
+    public static <T> PageAndDataResponse<T> create(T data, int totalRecord, int currentPage, int totalRecordOfPage) {
         return new PageAndDataResponse<T>(data, totalRecord, currentPage, totalRecordOfPage);
     }
 }

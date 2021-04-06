@@ -1,15 +1,22 @@
 package jp.gmo.project.mapper;
 
 import jp.gmo.project.constant.RegexConstants;
+import jp.gmo.project.dto.ProjectDetailDto;
 import jp.gmo.project.dto.ProjectDto;
 import jp.gmo.project.entity.ProjectEntity;
 import jp.gmo.project.request.AddProjectRequest;
 import jp.gmo.project.utils.DateUtils;
-import org.apache.commons.lang3.StringUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@AllArgsConstructor
 public class ProjectMapper {
+
+    private final ProjectDetailMapper projectDetailMapper;
 
     public ProjectEntity dtoToEntity(AddProjectRequest projectDto) {
 
@@ -38,29 +45,29 @@ public class ProjectMapper {
             projectEntity.setRank(Integer.parseInt(projectDto.getRank()));
             projectEntity.setScope(projectDto.getScope());
             projectEntity.setObjectives(projectDto.getObjectives());
-            projectEntity.setEmailCC(StringUtils.join(",", projectDto.getEmailCC()));
+            projectEntity.setEmailCC(String.join(",", projectDto.getEmailCC()));
 
             return projectEntity;
         }
     }
 
-    public ProjectDto entityToDto(ProjectEntity entity){
-        if(entity == null){
+    public ProjectDto entityToDto(ProjectEntity entity) {
+        if (entity == null) {
             return null;
         } else {
             ProjectDto projectDto = new ProjectDto();
             projectDto.setProjectCode(entity.getProjectCode());
-            if(entity.getProjectNameJP() != null){
+            if (entity.getProjectNameJP() != null) {
                 projectDto.setProjectNameJP(entity.getProjectNameJP());
             }
-            if(entity.getProjectNameVN() != null){
+            if (entity.getProjectNameVN() != null) {
                 projectDto.setProjectNameVN(entity.getProjectNameVN());
             }
-            if(entity.getBillableEffort() != null){
+            if (entity.getBillableEffort() != null) {
                 projectDto.setBillableEffort(entity.getBillableEffort());
             }
             projectDto.setStartDate(entity.getStartDate());
-            if(entity.getEndDate() != null){
+            if (entity.getEndDate() != null) {
                 projectDto.setEndDate(entity.getEndDate());
             }
 
@@ -70,6 +77,7 @@ public class ProjectMapper {
             projectDto.setScope(entity.getScope());
             projectDto.setObjectives(entity.getObjectives());
             projectDto.setEmailCC(entity.getEmailCC());
+            projectDto.setMemberList(entity.getProjectDetailList().stream().map(projectDetailMapper::entityToDto).collect(Collectors.toList()));
 
             return projectDto;
         }

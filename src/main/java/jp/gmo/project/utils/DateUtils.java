@@ -41,7 +41,8 @@ public class DateUtils {
         }
         try {
             DateTimeFormatter  dateFormat = DateTimeFormatter.ofPattern(pattern);
-            return (LocalDate) dateFormat.parse(str);
+
+            return LocalDate.parse(str, dateFormat);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -12,6 +12,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
+import org.zalando.problem.violations.ConstraintViolationProblem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 
 @ControllerAdvice
-public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait {
+public class ExceptionTranslator implements ProblemHandling {
 
     private static final String FIELD_ERRORS_KEY = "fieldErrors";
     private static final String MESSAGE_KEY = "message";
@@ -36,17 +37,18 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
             return null;
         }
         Problem problem = entity.getBody();
-        if (!(problem instanceof DefaultProblem)) {
-            return entity;
-        }
+
         ProblemBuilder builder = Problem.builder()
-                .withTitle(problem.getTitle())
                 .with(PATH_KEY, Objects.requireNonNull(request.getNativeRequest(HttpServletRequest.class)).getRequestURI());
 
-        problem.getParameters().forEach(builder::with);
+        if (!(problem instanceof DefaultProblem)) {
+            builder.with(MESSAGE_KEY, problem != null ? Objects.requireNonNull(problem.getTitle()) : "");
+        } else {
+            problem.getParameters().forEach(builder::with);
 
-        if (!problem.getParameters().containsKey(MESSAGE_KEY) && problem.getStatus() != null) {
-            builder.with(MESSAGE_KEY, Utils.getMessage("rs.error." + problem.getStatus().getStatusCode()));
+            if (!problem.getParameters().containsKey(MESSAGE_KEY) && problem.getStatus() != null) {
+                builder.with(MESSAGE_KEY, Utils.getMessage("rs.error." + problem.getStatus().getStatusCode()));
+            }
         }
 
         builder.with("timestamp", LocalDateTime.now());
@@ -62,9 +64,8 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
                 .collect(Collectors.toList());
 
         Problem problem = Problem.builder()
-                .withTitle("Method argument not valid")
                 .withStatus(defaultConstraintViolationStatus())
-                .with(MESSAGE_KEY, Utils.getMessage("rs.validate." + defaultConstraintViolationStatus()))
+                .with(MESSAGE_KEY, Utils.getMessage("rs.validate." + defaultConstraintViolationStatus().getStatusCode()))
                 .with(FIELD_ERRORS_KEY, fieldErrors)
                 .build();
         return create(ex, problem, request);

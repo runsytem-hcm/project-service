@@ -1,18 +1,28 @@
 package jp.gmo.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
+@Setter
+@Getter
+@Entity
+@Table(name = "project_detail")
 public class ProjectDetailEntity implements Serializable {
 
     @Id
-    @Column(name = "project_code")
-    private Integer projectCode;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+//    @Column(name = "project_code")
+//    private Integer projectCode;
 
     @Column(name = "employee_code")
     private String employeeCode;
@@ -34,4 +44,25 @@ public class ProjectDetailEntity implements Serializable {
 
     @Column(name = "delete_flag")
     private Integer deleteFlag;
+
+    @ManyToOne()
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "project_code")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private ProjectEntity projectEntity;
+
+
+    @Override
+    public String toString() {
+        return "ProjectDetailEntity{" +
+                "id=" + id +
+                ", employeeCode='" + employeeCode + '\'' +
+                ", positionCode=" + positionCode +
+                ", createTime=" + createTime +
+                ", createBy='" + createBy + '\'' +
+                ", updateTime=" + updateTime +
+                ", updateBy='" + updateBy + '\'' +
+                ", deleteFlag=" + deleteFlag +
+                '}';
+    }
 }

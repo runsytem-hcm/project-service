@@ -2,10 +2,11 @@ package jp.gmo.project.repository;
 
 import jp.gmo.project.entity.ProjectDetailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+@Repository
 public interface ProjectDetailRepository extends JpaRepository<ProjectDetailEntity, Integer> {
-    List<ProjectDetailEntity> findByProjectCode(int projectCode);
+    //List<ProjectDetailEntity> findByProjectCodeAndDeleteFlag(int projectCode, int deleteFlag);
 }

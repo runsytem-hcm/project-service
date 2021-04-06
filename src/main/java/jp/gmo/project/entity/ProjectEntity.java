@@ -1,14 +1,19 @@
 package jp.gmo.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "project")
-@Data
+@Getter
+@Setter
 public class ProjectEntity {
 
     @Id
@@ -63,4 +68,39 @@ public class ProjectEntity {
 
     @Column(name = "delete_flag")
     private Integer deleteFlag;
+
+    @OneToMany(mappedBy = "projectEntity", cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<ProjectDetailEntity> projectDetailList;
+
+    public void setProjectDetailList(List<ProjectDetailEntity> projectDetailList) {
+        this.projectDetailList = projectDetailList;
+        for (ProjectDetailEntity projectDetailEntity: projectDetailList) {
+            projectDetailEntity.setProjectEntity(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectEntity{" +
+                "projectCode=" + projectCode +
+                ", projectNameJP='" + projectNameJP + '\'' +
+                ", projectNameVN='" + projectNameVN + '\'' +
+                ", billableEffort='" + billableEffort + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", customerName='" + customerName + '\'' +
+                ", sale='" + sale + '\'' +
+                ", rank=" + rank +
+                ", scope='" + scope + '\'' +
+                ", objectives='" + objectives + '\'' +
+                ", emailCC='" + emailCC + '\'' +
+                ", createTime=" + createTime +
+                ", createBy='" + createBy + '\'' +
+                ", updateTime=" + updateTime +
+                ", updateBy='" + updateBy + '\'' +
+                ", deleteFlag=" + deleteFlag +
+                ", projectDetailList=" + projectDetailList +
+                '}';
+    }
 }

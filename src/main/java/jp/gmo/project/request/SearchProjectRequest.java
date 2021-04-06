@@ -17,8 +17,8 @@ public class SearchProjectRequest {
     private String startDate;
     private String endDate;
     @NotNull(message = "{" + MessageConstants.CONST_MSG_VALIDATE_NOT_NULL + "}")
-    private String currentPage;
+    private String page;
 
     @NotNull(message = "{" + MessageConstants.CONST_MSG_VALIDATE_NOT_NULL + "}")
-    private String totalRecordOfPage;
+    private String size;
 }

@@ -5,41 +5,72 @@
     version="2.1">
     <named-native-query name="getListProject" result-set-mapping="projectInfo">
         <query>
+            <![CDATA[
             SELECT prj.project_code AS projectCode,
                     CASE WHEN prj.project_name_vn = '' AND prj.project_name_jp <> '' THEN prj.project_name_jp
                          WHEN prj.project_name_vn <> '' AND prj.project_name_jp = '' THEN prj.project_name_vn
                             ELSE prj.project_name_vn
                     END AS projectName,
-                    prd.employee_code AS memberCode,
                     emp.employee_name AS memberName,
                     pos.position_name AS position,
                     prj.start_date AS startDate,
-                    prj.end_date AS endDate,
-                    prj.create_time AS createTime
-            FROM db_gzr_webinternal_dev.project prj
-            INNER JOIN db_gzr_webinternal_dev.project_detail prd ON prd.project_code = prj.project_code AND prd.delete_flag = 0
-            INNER JOIN db_gzr_webinternal_dev.employees emp ON emp.employee_code = prd.employee_code AND emp.delete_flag = 0
-            INNER JOIN db_gzr_webinternal_dev.m_position pos ON pos.id = prd.position_code AND pos.delete_flag = 0
+                    prj.end_date AS endDate
+            FROM project prj
+            INNER JOIN project_detail prd ON prd.project_code = prj.project_code AND prd.delete_flag = 0
+            INNER JOIN employees emp ON emp.employee_code = prd.employee_code AND emp.delete_flag = 0
+            INNER JOIN m_position pos ON pos.id = prd.position_code AND pos.delete_flag = 0
             WHERE prj.delete_flag = 0
-                AND pos.id = 3
-                AND (prj.project_name_vn = :projectName OR prj.project_name_jp = :projectName)
+                AND pos.id = 1
+                AND ((LENGTH(:projectName) = 0 OR prj.project_name_vn = :projectName) OR (LENGTH(:projectName) = 0 OR prj.project_name_jp = :projectName))
                 AND (LENGTH(:startDate) = 0 OR prj.start_date >= :startDate)
                 AND (LENGTH(:endDate) = 0 OR prj.end_date <= :endDate)
                 ORDER BY prj.create_time DESC
                 LIMIT :offset, :limit
+                ]]>
+        </query>
+    </named-native-query>
+
+    <named-native-query name="countProject">
+        <query>
+            <![CDATA[
+                SELECT COUNT(prj.project_code)
+                FROM project prj
+                INNER JOIN project_detail prd ON prd.project_code = prj.project_code AND prd.delete_flag = 0
+                INNER JOIN employees emp ON emp.employee_code = prd.employee_code AND emp.delete_flag = 0
+                INNER JOIN m_position pos ON pos.id = prd.position_code AND pos.delete_flag = 0
+                WHERE prj.delete_flag = 0
+                    AND pos.id = 1
+                    AND ((LENGTH(:projectName) = 0 OR prj.project_name_vn = :projectName) OR (LENGTH(:projectName) = 0 OR prj.project_name_jp = :projectName))
+                    AND (LENGTH(:startDate) = 0 OR prj.start_date >= :startDate)
+                    AND (LENGTH(:endDate) = 0 OR prj.end_date <= :endDate)
+            ]]>
+        </query>
+    </named-native-query>
+
+    <named-native-query name="checkRoleOfProject">
+        <query>
+            SELECT
+                COUNT(prd.project_code) as count
+            FROM
+                project_detail prd
+            INNER JOIN project prj ON prd.project_code = prj.project_code
+            AND prj.delete_flag = 0
+            WHERE
+                prd.delete_flag = 0
+            AND prd.project_code = :projectCode
+            AND prd.employee_code = :employeeCode
+            AND prd.position_code IN (:positionCode)
         </query>
     </named-native-query>
 
     <sql-result-set-mapping name="projectInfo">
         <constructor-result target-class="jp.gmo.project.dto.ProjectSearchDto">
-            <column name="projectCode" />
+            <column name="projectCode"/>
             <column name="projectName" />
-            <column name="memberCode" />
             <column name="memberName" />
             <column name="position" />
-            <column name="startDate" />
-            <column name="endDate" />
-            <column name="createTime" />
+            <column name="startDate" class="java.time.LocalDate"/>
+            <column name="endDate" class="java.time.LocalDate"/>
         </constructor-result>
     </sql-result-set-mapping>
 

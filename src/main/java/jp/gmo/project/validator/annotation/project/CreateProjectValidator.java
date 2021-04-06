@@ -4,6 +4,7 @@ import jp.gmo.project.constant.MessageConstants;
 import jp.gmo.project.constant.RegexConstants;
 import jp.gmo.project.entity.Rank;
 import jp.gmo.project.repository.RankRepository;
+import jp.gmo.project.request.AddProjectDetailRequest;
 import jp.gmo.project.request.AddProjectRequest;
 import jp.gmo.project.utils.DateUtils;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.hibernate.validator.constraintvalidation.HibernateConstraintValidator
 
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -33,6 +35,7 @@ public class CreateProjectValidator implements HibernateConstraintValidator<Crea
         String startDate = request.getStartDate();
         String endDate = request.getEndDate();
         String projectRank = request.getRank();
+        List<AddProjectDetailRequest> memberList = request.getMemberList();
 
         // Initial flag valid = true
         boolean isValid = true;
@@ -52,6 +55,8 @@ public class CreateProjectValidator implements HibernateConstraintValidator<Crea
                     .addPropertyNode("projectNameVN").addConstraintViolation();
             isValid = false;
         }
+
+        // Check member of project
 
         // Check validate field StartDate and EndDate
         if (!StringUtils.isEmpty(startDate) && !StringUtils.isEmpty(endDate)) {

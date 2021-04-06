@@ -1,21 +1,21 @@
 package jp.gmo.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class ProjectSearchDto implements Serializable {
-    private String projectCode;
+    private Integer projectCode;
     private String projectName;
-    private String memberCode;
     private String memberName;
     private String position;
-    private String startDate;
-    private String endDate;
-    private String createTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 }
