@@ -12,7 +12,6 @@ import jp.gmo.project.repository.ProjectDetailRepository;
 import jp.gmo.project.repository.ProjectRepository;
 import jp.gmo.project.repository.RankRepository;
 import jp.gmo.project.request.AddProjectRequest;
-import jp.gmo.project.request.SearchProjectRequest;
 import jp.gmo.project.request.UpdateProjectRequest;
 import jp.gmo.project.response.PageAndDataResponse;
 import jp.gmo.project.response.ProjectDetailResponse;
@@ -25,14 +24,12 @@ import jp.gmo.project.utils.enums.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,14 +50,15 @@ public class ProjectServiceImpl implements ProjectService {
         if (projectRepository.findByProjectNameJPAndProjectNameVNAndDeleteFlag(request.getProjectNameJP(), request.getProjectNameVN(), 0).isPresent()) {
             throw new ProjectExistException();
         }
+        LocalDateTime time = LocalDateTime.now();
 
         ProjectEntity projectEntity = projectMapper.dtoToEntity(request);
-        projectEntity.setCreateTime(LocalDateTime.now());
+        projectEntity.setCreateTime(time);
         projectEntity.setCreateBy(Utils.getUpdateBy(email));
         projectEntity.setDeleteFlag(0);
 
         List<ProjectDetailEntity> memberList = new ArrayList<>();
-        LocalDateTime time = LocalDateTime.now();
+
 
         request.getMemberList().forEach(addProjectDetailRequest -> {
             ProjectDetailEntity projectDetail = projectDetailMapper.dtoToEntity(addProjectDetailRequest);
@@ -78,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<RankDto> executeGetListRank() {
+    public List<RankDto>  executeGetListRank() {
         return rankRepository.findByDeleteFlag(0).stream().map(rank -> new RankDto(rank.getRank(), rank.getDescription())).collect(Collectors.toList());
     }
 
@@ -159,7 +157,7 @@ public class ProjectServiceImpl implements ProjectService {
                                 .filter(projectDto -> projectDto.getPositionCode().equals(PositionEnum.PROJECT_MANAGER.getValue()))
                                 .collect(Collectors.toList());
 
-                        if(countRolePM.size() > 1){
+                        if (countRolePM.size() > 1) {
                             throw new DuplicateException("Role của PM không được trùng.");
                         }
 

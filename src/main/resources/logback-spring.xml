@@ -91,20 +91,20 @@
     <logger name="org.apache" level="WARN" />
     <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF" />
     <logger name="org.bson" level="WARN" />
-    <logger name="org.hibernate.validator" level="INFO" />
-    <logger name="org.hibernate" level="WARN" />
+    <logger name="org.hibernate.validator" level="DEBUG" />
+    <logger name="org.hibernate" level="DEBUG" />
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF" />
-    <logger name="org.springframework" level="WARN" />
-    <logger name="org.springframework.web" level="WARN" />
-    <logger name="org.springframework.security" level="INFO" />
-    <logger name="org.springframework.cache" level="WARN" />
+    <logger name="org.springframework" level="DEBUG" />
+    <logger name="org.springframework.web" level="DEBUG" />
+    <logger name="org.springframework.security" level="DEBUG" />
+    <logger name="org.springframework.cache" level="DEBUG" />
     <logger name="org.thymeleaf" level="WARN" />
     <logger name="org.xnio" level="WARN" />
     <logger name="springfox" level="WARN" />
     <logger name="sun.rmi" level="WARN" />
     <logger name="sun.rmi.transport" level="WARN" />
     <logger name="com.amazonaws" level="WARN" />
-    <logger name="com.zaxxer.hikari" level="WARN" />
+    <logger name="com.zaxxer.hikari" level="DEBUG" />
 
 
     <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->

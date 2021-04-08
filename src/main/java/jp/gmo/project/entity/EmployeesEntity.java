@@ -1,6 +1,8 @@
 package jp.gmo.project.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "employees")
 public class EmployeesEntity {
@@ -41,4 +44,18 @@ public class EmployeesEntity {
     @NotNull
     @Column(name = "delete_flag")
     private int deleteFlag;
+
+    @Override
+    public String toString() {
+        return "EmployeesEntity{" +
+                "employeeCode='" + employeeCode + '\'' +
+                ", email='" + email + '\'' +
+                ", employeeName='" + employeeName + '\'' +
+                ", createTime=" + createTime +
+                ", createBy='" + createBy + '\'' +
+                ", updateTime=" + updateTime +
+                ", updateBy='" + updateBy + '\'' +
+                ", deleteFlag=" + deleteFlag +
+                '}';
+    }
 }
